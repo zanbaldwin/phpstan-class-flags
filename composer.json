@@ -1,0 +1,32 @@
+{
+    "name": "wedevelop/phpstan-class-flags",
+    "description": "A PHPStan extension to explicitly indicate that a class does not need the readonly attribute.",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "WeDevelop\\PHPStan\\ClassFlags\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Zan Baldwin",
+            "email": "hello@zanbaldwin.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "phpstan/phpstan": "^1.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan-deprecation-rules": "^1.1"
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "rules.neon"
+            ]
+        }
+    }
+}
