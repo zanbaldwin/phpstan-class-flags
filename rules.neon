@@ -1,0 +1,6 @@
+rules:
+  - WeDevelop\PHPStan\ClassFlags\Rule\IsStatefulRule
+  - WeDevelop\PHPStan\ClassFlags\Rule\IsExtendableRule
+parameters:
+  bootstrapFiles:
+    - bootstrap.php
