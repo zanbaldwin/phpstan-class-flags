@@ -1,6 +1,6 @@
 {
     "name": "wedevelop/phpstan-class-flags",
-    "description": "A PHPStan extension to explicitly indicate that a class does not need the readonly attribute.",
+    "description": "A PHPStan extension to enforce explicitly stating when a class should not have readonly or final keywords.",
     "type": "library",
     "license": "MIT",
     "minimum-stability": "stable",
