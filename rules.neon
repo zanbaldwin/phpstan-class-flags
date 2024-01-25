@@ -1,7 +1,3 @@
-rules:
-  - WeDevelop\PHPStan\ClassFlags\Rule\IsStatefulRule
-  - WeDevelop\PHPStan\ClassFlags\Rule\IsExtendableRule
-
 parametersSchema:
     classFlagsIgnore: structure([
         extendable: structure([
@@ -31,9 +27,21 @@ services:
         arguments:
             concrete: '%classFlagsIgnore.stateful.concrete%'
             instanceOf: '%classFlagsIgnore.stateful.instanceOf%'
+    -
+        class: 'WeDevelop\PHPStan\ClassFlags\Rule\IsStatefulRule'
+        arguments:
+            classExclusionChecker: '@statefulClassExclusionChecker'
+        tags:
+            - 'phpstan.rules.rule'
 
     extendableClassExclusionChecker:
         class: 'WeDevelop\PHPStan\ClassFlags\Exclude\ClassExclusionChecker'
         arguments:
             concrete: '%classFlagsIgnore.extendable.concrete%'
             instanceOf: '%classFlagsIgnore.extendable.instanceOf%'
+    -
+        class: 'WeDevelop\PHPStan\ClassFlags\Rule\IsExtendableRule'
+        arguments:
+            classExclusionChecker: '@extendableClassExclusionChecker'
+        tags:
+            - 'phpstan.rules.rule'

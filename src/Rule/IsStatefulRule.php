@@ -9,12 +9,17 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\ShouldNotHappenException;
+use WeDevelop\PHPStan\ClassFlags\Exclude\ClassExclusionChecker;
 use WeDevelop\PHPStan\ClassFlags\Flag\HasState;
 use WeDevelop\PHPStan\ClassFlags\Util\AttributeHelper;
 
 /** @implements Rule<InClassNode> */
 final readonly class IsStatefulRule implements Rule
 {
+    public function __construct(
+        private ClassExclusionChecker $classExclusionChecker,
+    ) {}
+
     public function getNodeType(): string
     {
         return InClassNode::class;
@@ -32,6 +37,10 @@ final readonly class IsStatefulRule implements Rule
                 'Could not construct reflection object for node of type "%s".',
                 InClassNode::class,
             ));
+        }
+
+        if ($this->classExclusionChecker->shouldIgnoreClass($classReflection->getName())) {
+            return [];
         }
 
         // Don't bother with adding #[HasState] to anonymous classes because it'll most likely confuse: are we adding

@@ -9,12 +9,17 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\ShouldNotHappenException;
+use WeDevelop\PHPStan\ClassFlags\Exclude\ClassExclusionChecker;
 use WeDevelop\PHPStan\ClassFlags\Flag\Extendable;
 use WeDevelop\PHPStan\ClassFlags\Util\AttributeHelper;
 
 /** @implements Rule<InClassNode> */
 final readonly class IsExtendableRule implements Rule
 {
+    public function __construct(
+        private ClassExclusionChecker $classExclusionChecker,
+    ) {}
+
     public function getNodeType(): string
     {
         return InClassNode::class;
@@ -32,6 +37,10 @@ final readonly class IsExtendableRule implements Rule
                 'Could not construct reflection object for node of type "%s".',
                 InClassNode::class,
             ));
+        }
+
+        if ($this->classExclusionChecker->shouldIgnoreClass($classReflection->getName())) {
+            return [];
         }
 
         // We do not extend from anonymous classes, but neither do we add the final keyword to them either.
