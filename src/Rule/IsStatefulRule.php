@@ -8,6 +8,7 @@ use PHPStan\Node\InClassNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPStan\ShouldNotHappenException;
 use WeDevelop\PHPStan\ClassFlags\Flag\HasState;
 use WeDevelop\PHPStan\ClassFlags\Util\AttributeHelper;
 
@@ -21,13 +22,16 @@ final readonly class IsStatefulRule implements Rule
 
     /**
      * @param InClassNode $node
+     * @throws ShouldNotHappenException
      * @return RuleError[]
      */
     public function processNode(Node $node, Scope $scope): array
     {
         if (null === $classReflection = $scope->getClassReflection()?->getNativeReflection()) {
-            // Why were we passed a node that is not a class?
-            return [];
+            throw new ShouldNotHappenException(sprintf(
+                'Could not construct reflection object for node of type "%s".',
+                InClassNode::class,
+            ));
         }
 
         // Don't bother with adding #[HasState] to anonymous classes because it'll most likely confuse: are we adding
