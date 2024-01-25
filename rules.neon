@@ -1,6 +1,39 @@
 rules:
   - WeDevelop\PHPStan\ClassFlags\Rule\IsStatefulRule
   - WeDevelop\PHPStan\ClassFlags\Rule\IsExtendableRule
+
+parametersSchema:
+    classFlagsIgnore: structure([
+        extendable: structure([
+            concrete: listOf(string())
+            instanceOf: listOf(string())
+        ])
+        stateful: structure([
+            concrete: listOf(string())
+            instanceOf: listOf(string())
+        ])
+    ])
+
 parameters:
-  bootstrapFiles:
-    - bootstrap.php
+    classFlagsIgnore:
+        extendable:
+            concrete: []
+            instanceOf: []
+        stateful:
+            concrete: []
+            instanceOf: []
+    bootstrapFiles:
+        - 'bootstrap.php'
+
+services:
+    statefulClassExclusionChecker:
+        class: 'WeDevelop\PHPStan\ClassFlags\Exclude\ClassExclusionChecker'
+        arguments:
+            concrete: '%classFlagsIgnore.stateful.concrete%'
+            instanceOf: '%classFlagsIgnore.stateful.instanceOf%'
+
+    extendableClassExclusionChecker:
+        class: 'WeDevelop\PHPStan\ClassFlags\Exclude\ClassExclusionChecker'
+        arguments:
+            concrete: '%classFlagsIgnore.extendable.concrete%'
+            instanceOf: '%classFlagsIgnore.extendable.instanceOf%'
