@@ -43,9 +43,24 @@ final readonly class IsExtendableRule implements Rule
             return [];
         }
 
+        // There's absolute no need to require `doctrine/orm` and `doctrine/mongodb-odm`
+        // as dependencies *just* to reference class names.
+        $isProxied = AttributeHelper::hasAttributeOnClass($classReflection, [
+            // @phpstan-ignore-next-line
+            \Doctrine\ORM\Mappings\Entity::class,
+            // @phpstan-ignore-next-line
+            \Doctrine\ORM\Mappings\Embeddable::class,
+            // @phpstan-ignore-next-line
+            \Doctrine\ODM\MongoDB\Mapping\Annotations\Document::class,
+            // @phpstan-ignore-next-line
+            \Doctrine\ODM\MongoDB\Mapping\Annotations\EmbeddedDocument::class,
+        ]);
+
         // We do not extend from anonymous classes, but neither do we add the final keyword to them either.
         // PHP already prohibits using both abstract and final keywords together.
-        if ($classReflection->isAnonymous() || $classReflection->isAbstract()) {
+        // Classes that are going to be proxied via Doctrine shouldn't be final, and it's a hassle to enforce
+        // #[HasState] on them when we already have another attribute stating what it is.
+        if ($classReflection->isAnonymous() || $classReflection->isAbstract() || $isProxied) {
             return [];
         }
 
